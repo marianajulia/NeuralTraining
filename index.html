@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Classificador de Frutas</title>
+</head>
+<body>
+    <h1>Descubra se é Maçã ou Laranja</h1>
+    <form id="form">
+        <label>Peso (g):</label>
+        <input type="number" id="peso" required><br><br>
+
+        <label>Tamanho (cm):</label>
+        <input type="number" id="tamanho" step="any" required><br><br>
+
+        <button type="submit">Classificar</button>
+    </form>
+
+    <h2 id="resultado"></h2>
+
+    <script>
+        document.getElementById("form").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const peso = parseFloat(document.getElementById("peso").value);
+            const tamanho = parseFloat(document.getElementById("tamanho").value);
+
+            fetch("http://127.0.0.1:5000/prever", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ peso, tamanho })
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById("resultado").textContent = "Resultado: " + data.resultado;
+            })
+            .catch(err => {
+                document.getElementById("resultado").textContent = "Erro ao conectar ao servidor.";
+            });
+        });
+    </script>
+</body>
+</html>
